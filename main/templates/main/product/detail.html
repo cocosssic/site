@@ -1,0 +1,28 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}
+    <title>{{ product.name }}</title>
+{% endblock %}
+{% block content %}
+    <div class="product-detail">
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="img-fluid rounded-start">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <h6 class="card-title"><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h6>
+                            <p class="card-text">${{ product.price }}</p>
+                            <form action="{% url "cart:cart_add" product.id %}" method="post">
+                             {{ cart_product_form }}
+                             {% csrf_token %}
+                             <input type="submit" value="Добавить в корзину">
+                            </form>
+                            <p class="card-text"><small class="text-muted">{{ product.description|linebreaks }}</small></p>
+                        </div>
+                    </div>
+                </div>
+    </div>
+{% endblock %}

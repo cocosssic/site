@@ -1,0 +1,45 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}
+    {% if category %}
+    <title>{{ category.name }}</title>{% else %}<title>Товары</title>{% endif %}
+{% endblock %}
+{% block content %}
+    <div id="sidebar">
+        <h3>Категории</h3>
+        <ul>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked>
+                <p {% if not category %}class="selected"{% endif %}>
+                    <label class="btn btn-outline-danger" for="vbtn-radio1"><a href="{% url "main:product_list" %}">Все товары</a></label>
+                </p>
+                {% for c in categories %}
+                    <p {% if category.slug == c.slug %}class="selected"{% endif %}>
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off">
+                        <label class="btn btn-outline-danger" for="vbtn-radio2"><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></label>
+                    </p>
+                {% endfor %}
+        </ul>
+    </div>
+    <div id="main" class="product-list">
+        <h1>{% if category %}{{ category.name }}{% else %}Товары{% endif %}</h1>
+        {% for product in products %}
+            <div class="item">
+                <a href="{{ product.get_absolute_url }}">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="img-fluid rounded-start">
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
+                                    <p class="card-text">${{ product.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
